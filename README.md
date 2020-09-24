@@ -402,17 +402,65 @@ $ git commit -am "update .gitignore"
 
 
 ### Git Tags
+- create and add a tag to a commit
+```sh
+$ git tag myTag
+$ git tag --list
+```
+- delete a tag
+```sh
+$ git tag -d myTag
+```
+- Better practice with use tag with annotation
+```sh
+$ git tag -a V1.0 -m "Release 1.0"
+$ git tag --list
+```
+- Show the tag annotation
+```sh
+$ git show V10
+```
 
+### Stashing
+- file changed, which should not happen now
+- use git stash to undo the changes
+```sh
+$ notepad README.md /* update the readme file
+$ git status /* show README.md should be added
+$ git stash /* git update the head pointer
+$ git stash list /* shows the stash list
+$ git status /* now back to a clean working directory
+```
+- delete a stash action
+```sh
+$ notepad LICENSE.txt /* modify the LICENSE txt file
+$ git commit -am "update license file" /* commit the LICENSE file change
+$ git status /* clean working directory
+$ git stash pop /* two actions: apply and drop 
+/* stash apply: apply whatever the stash is the last stash, that put the changes back in README file
+/* stash drop: it drop the stash that is applied
+$ git stash --list /* no stash
+$ notepad README.md /* readme.md file all changes are removed
+$ git commit -am "update readme again"
+$ git status /* clean work directory
+```
 
+### Time Travel with Reset and Reflog
+- change to a different commit point, eg. roll back to previous point
+```sh
+$ git hist /* show the history of git commits
+$ git reset ce2di90 --soft /* reset the ce2di90 commit
+```
+- 3 types of reset:
+    - soft: change the head pointer, keep all commit
+    - mixed: change head pointer, some commits deleted
+    - hard: change head pointer, add and commits deleted. clean working directory
 
-
-
-### Milestones
-
-
-### Work in Progress
-
-### Time travel
-
-
-### Other
+- Reflog used to go back to a specific commit id
+```sh
+$ git reflog /* show all actions 
+$ git reset cie1038ji --hard /* reset the head pointer back
+$ git log --oneline /* now git history back again
+```
+-------
+## Github
