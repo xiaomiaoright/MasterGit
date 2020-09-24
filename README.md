@@ -278,3 +278,141 @@ $ git commit -m "Adding ignore file"
 
 -------
 ## Advanded Git 
+### Compare differences
+- compare difference between two commits
+```sh
+$ git help diff
+$ git hist
+$ git diff fij3279 fwei3894
+$ git diff fij3279 HEAD
+```
+
+
+HEAD is the last commit pointer
+
+### Branching, Merging and Conflict Resolution
+- Branch = timeline of commits
+- brach names are labels
+- Deletion removes labels only
+
+- type of merges
+    - Fast-forward
+        - Simplest case
+        - Like never branched (commit on destination)
+        - Can be disables
+    - Automatic merge
+        - non conflicting merge detected
+        - preserves both timelines
+        - merge commit on destination
+    - Manual merge
+        - resolve conflicts first
+- Special markers
+    - HEAD, like pointers, last commit of the branch
+- check git branches
+```sh
+$ git branch
+```
+- create and switch to a new branch
+```sh
+$ git checkout -b newBranch
+```
+
+- add and commit on the new branch
+```sh
+$ git add .
+$ git commit -m "Update on newBranch"
+```
+
+- check history
+```sh
+$ git hist
+```
+
+- compare difference between branches
+```sh
+$ git diff master newBranch
+```
+
+- after commiting on children branch, switch back to master branch before merge
+```sh
+$ git checkout master
+```
+- merge the newBranch with master branch: fast forward merge
+```sh
+$ git merge  updates
+$ git hist
+```
+Now HEAD master and newBranch point to the same git commit ID
+
+- after merge, the children branch can be deleted
+```sh
+$ git branch -d newBranch
+$ git branch
+```
+
+- return back to master and modify the same file at the same position to create the conflicts
+```sh
+$ git checkout -b very-bad
+$ notepad README.md  -- create a change in read me file
+$ git commit -am "very bad update"
+```
+
+
+- resolving conflicts before merge
+```sh
+$  git checkout master 
+$ notepad README.md -- modify the readme file at the same position
+$ git commit -am "update at master"
+```
+- check branches before merge
+```sh
+$ git branch -a
+```
+- Try auto merge the two branches
+
+```sh
+$ git checkout master
+$ git merge newBranch
+```
+Message reads there is conflict
+
+- review the conflicting file
+```sh
+$ cat README.md
+```
+- resolve the conflict with mergingtool
+```sh
+$ git mergetool 
+```
+
+- commit after resolving conflicts
+```sh
+$ git commit -m "resolve commit"
+```
+
+- check git status after resolving merge
+```sh
+$ git status
+```
+Message read that is a README.md.orig file waiting to be staged. This is the original file of README. Add this .orig file into .gitignore file. Then commit the .gitignore file
+
+```sh
+$ git commit -am "update .gitignore"
+```
+
+
+### Git Tags
+
+
+
+
+
+### Milestones
+
+
+### Work in Progress
+
+### Time travel
+
+
+### Other
