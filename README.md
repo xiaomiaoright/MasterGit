@@ -314,7 +314,8 @@ $ git branch
 ```
 - create and switch to a new branch
 ```sh
-$ git checkout -b newBranch
+
+
 ```
 
 - add and commit on the new branch
@@ -353,7 +354,7 @@ $ git branch
 - return back to master and modify the same file at the same position to create the conflicts
 ```sh
 $ git checkout -b very-bad
-$ notepad README.md  -- create a change in read me file
+$ notepad README.md  /* create a change in read me file
 $ git commit -am "very bad update"
 ```
 
@@ -361,7 +362,7 @@ $ git commit -am "very bad update"
 - resolving conflicts before merge
 ```sh
 $  git checkout master 
-$ notepad README.md -- modify the readme file at the same position
+$ notepad README.md /* modify the readme file at the same position
 $ git commit -am "update at master"
 ```
 - check branches before merge
@@ -464,3 +465,166 @@ $ git log --oneline /* now git history back again
 ```
 -------
 ## Github
+- Link github repo to a local repo
+```sh
+$ git remote -v /* in the local repo, check if there is connected remote repo
+$ git remot add origin githubURL /* add take two args: name of the reference(origin, or any name. by convention, the first and primary remote repo is named origin) and the full URL to the remote repo. 
+$ git remote -v /* now the local git repo is connected with remote origin
+```
+- push local git repo to a newly created github repo
+```sh
+$ git status /* check status of local repo
+$ git remote -v /* check remote repo connection
+$ git push -u origin master --tags 
+/* snychronize the changes between local git and remote git repo
+/* -u tracking branching relationship between local master branch and remote master branch
+/* after -u is origin: name of the remote repo going to use, next time push action, -u wont be needed.
+/* after name of remote repo is branch going to push up to
+/* --tag will send all the tags used in current repo up to github
+```
+-----
+## Github Repository
+### Git clone
+- create a local copy of remove repo with git clone
+```sh
+$ cd projects/ /* change the path to the desired folder path
+$ git clone repoURL
+$ ls -l /* check the folders in the current path. There should be new folder for the cloned repo
+$ cd myRepo/ /* update path to myRepo, by default it should show master branch
+$ ls -al /* check all the files in myRepo folder
+$ git remote -v /* list all the remote repo available
+```
+
+- remove the cloned repo folder
+```sh
+$ cd .. /* change path to the upper folder of the repo folder
+$ rm -rf myRepo /* remove myRepo folder
+```
+
+- clone a remote github repo to local and define the folder name
+```sh
+$ git clone nyRepoURL myFolderName 
+$ ls -al
+```
+
+### Get contect: seed the repository
+- copy files to the current local repo folder
+- bash command cp
+```sh
+$ cp -R ~/Downloads/initilizr/* . 
+$ git add .
+$ git commit -m "add initial files"
+/* cp is the bash command of copy
+/* -R means recursively copy
+/* followed by the folder path to be copied
+/* . means copy to the current folder
+```
+
+- push the local commits to remote repo
+```sh
+$ git push origin master
+/* origin is the name of remote
+/* master is the branch
+```
+
+- public back to GitHub
+```sh
+$  git config --global push.default simple
+/* config the git push command to simple version
+```
+### git fetch and pull
+Curent status of the local and remote repos: clean working directory and up-to-date with remote repo
+
+- make a change of a local
+```sh
+$ notepad README.md /* change readme file so the local repo is not up to date with remote
+$ git commit -am "update readme"
+$ git status /* the local branch is one commit ahead of the remote branch
+```
+
+- if try to git push, it reads an error
+- git pull: two commands in one: fetech + merge
+```sh
+$ git fetch /* update all local info based on remote repo
+$ git pull 
+/* merge everything from github
+$ git push
+```
+
+Doing a pull or a fetech prior to any pushes is best practice
+
+- update Repository and References
+IF the remote repo is rename, then the local reference to the remote repo need to be updated
+```sh
+$ git remote -v
+$ git remote set-url origin newURL /* update the remote repo URL to new URL
+$ git remote -v /* now the local repo should point to the new URL
+$ git remote show origin
+```
+
+### looking at, create, and edit files at GitHub
+- If file is changed directly on Github, need to commit change on github
+- When commit the change on github, a new branch can be created. 
+- The action will triger a pull request to the master branch.
+- So there will be a pull commit message editor and comment along with it
+- Then click the create pull request
+- The Merge pull request will be available. The pull commit message can be edited here. Then click confirm merge
+- once the newBranch is merged with the master branch, the new branch can be deleted.
+
+
+- Renaming and deleting files on Github
+
+### Synchronizing Github changes on local repo
+- There are severl commits made on the Github remote repo
+```sh
+$ git status /* local repo should be non-staging/all committed
+$ git fetech /* update local references from remote github
+$ git status /* message read that the local repo is behind remote repo by serveral commits
+$ git pull /* This will update the remote commits to local repo
+```
+
+- Review commits with commits list
+- Using CommitID with local git repo
+```sh
+$ git status
+$ git pull
+$ git show commitID /* CommitID can be found from the Github -> Commits
+```
+
+### Create Branches on Github
+### Create local branch and push to github
+```sh
+$ git checkout -b newBranch /* create and switched to newBranch
+$ git rm myfile.txt /* remove myfile.txt under newBranch
+$ git commit -m "remove myfile"
+$ git status /* back to clean working directory
+```
+All the changes are made locally. Back to remote github, there is no newBranch.
+
+```sh
+$ git push -u origin newBranch 
+/* -u create tracking relationship
+/* origin is the name of the remote
+/* newBranch is created on Github
+/* after that a tracking relationship is set up, means the two branches are sync with each other
+/* If git pull or git push without specifying, this is the branch that it will be going to
+```
+
+
+### Comparing and Pull Requests
+[reference](https://guides.github.com/activities/hello-world/#:~:text=Pull%20Requests%20are%20the%20heart,the%20content%20from%20both%20branches.)
+
+When  you have changes in a branch off of main(master), you can open a pull request. 
+
+Pull Requests are the heart of collaboration on GitHub. When you open a pull request, you’re proposing your changes and requesting that someone review and pull in your contribution and merge them into their branch. Pull requests show diffs, or differences, of the content from both branches. The changes, additions, and subtractions are shown in green and red.
+
+
+As soon as you make a commit, you can open a pull request and start a discussion, even before the code is finished.
+
+Open a Pull Request for changes to the README
+1. Click the  Pull Request tab, then from the Pull Request page, click the green New pull request button.
+2. In the Example Comparisons box, select the branch you made, readme-edits, to compare with main (the original).
+3. Look over your changes in the diffs on the Compare page, make sure they’re what you want to submit.
+4. When you’re satisfied that these are the changes you want to submit, click the big green Create Pull Request button.
+5. Give your pull request a title and write a brief description of your changes.
+6. When you’re done with your message, click Create pull request!
