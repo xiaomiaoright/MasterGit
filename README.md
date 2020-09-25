@@ -628,3 +628,82 @@ Open a Pull Request for changes to the README
 4. When you’re satisfied that these are the changes you want to submit, click the big green Create Pull Request button.
 5. Give your pull request a title and write a brief description of your changes.
 6. When you’re done with your message, click Create pull request!
+
+### Merging Locally (Merge branch)
+Integrate changes in other branches into the master branch.
+
+```sh
+$ git status
+$ git checkout master /* switch back to master
+$ git pull /* keep the master branch up to date with the remote
+$ git merge newBranch
+/* prompt for merge message
+$ git push /* synchronize local changes back to github
+```
+
+- Remove a branch locally
+```sh
+$ git branch -a /* list all the branches
+$ git branch -d newBranch /* remove new branch
+$ git branch -a
+```
+The local newBranch is deleted but there is still the reference to remote branch reference.
+
+```sh
+$ git fetech -p /* prune option. look for dead branches and remove these references
+```
+
+- Locally switch to a branch in github
+- Create a branch on github
+```sh
+$ git status
+$ git branch -a
+/* since a newBranch is created on remote Github, so fetech the changes locally
+$ git fetch
+$ git branch -a
+$ git checkout newBranch /* now the local newBranch and remote newBranch are tracked
+```
+- make some update in the local newBranch
+```sh
+$ notepad README.md
+$ git commit -am "update readme"
+$ git push /* git will push the changes to the tracked newBranch on github
+```
+
+- Clean up by deleting branches and references
+```sh
+$ git checkout master /* switch back to master
+$ git pull /* without specifying branches, git will pull from master branch on Github
+$ git pull --all /* git hub update all tracking branch
+$ git merge
+$ git push /* push local master to remote master
+$ git branch -d newBranch /* delete local branch, but remote newBranch is still there
+```
+
+- Delete a remote branch from a command line
+```sh
+/* currently under the local master branch
+$ git push origin :newBranch
+/* using git push with args
+/* origin is the name of the remote
+/* followed by a ":", telling git anything followed the ":" should be deleted
+/* newBranch is the remote Branch to be deleted
+$ git branch -a
+```
+
+### pull with rebase
+- rebase: rewinds the current commits on your branch to a point where the branch you are merging in originally diverged
+- rebase can make sure whatever changes made on local is ahead of remote
+
+1. local and remote repo are up to date
+```sh
+$ git status
+$ git pull /* make sure everything is up to date
+```
+2. make some changes on remote github and commit. Remote git repo is one commit ahead of local
+3. make some changes on local git repo and commit. Now both local and remote git repo have one commit out of date
+4. If run git fetech, git will update the local repo with whatever updates make on remote
+```sh
+$ git fetch
+```
+5. run git status. Git shows local and remote have diverged. 1 and 1 commit different from each other. 
