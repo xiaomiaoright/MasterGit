@@ -707,3 +707,234 @@ $ git pull /* make sure everything is up to date
 $ git fetch
 ```
 5. run git status. Git shows local and remote have diverged. 1 and 1 commit different from each other. 
+```sh
+$ git status
+```
+6. Git merge is an option. But to make sure the local repo is ahead of the remote, use  rebase first
+```sh
+$ git pull --rebase
+```
+/* rebase means git will pull the remote commits first before the local commits.
+7. run git hist to check the pulled remote commits and local commits
+```sh
+$ git hist
+```
+8. push changes to github
+```sh
+$ git push
+```
+- Github Graphs and Networking
+```sh
+$ git log --oneline --graph /* press q to quit
+```
+
+- change default branch on github
+
+    In production, master branch should not be the active development branch. Instead, there should be  long live development branch, where changes can be made. When the product is ready to release, merge the development branch to master branch.
+
+    - Change the default branch on github repo setting
+    - when the default branch (develop) is changed, when create a pull request, the base branch will be the default branch
+    - When clone the github repo to local
+        - local repo has develop branch, but does not have a master branch
+        - develop branch is set up as tracking branch at local
+        - if want to get the master branch on local, will need to checkout the develop branch and fetch it down from the remote repository
+        ```sh
+        $ git checkout master
+        /* since there is no master branch local, git goes to remote and brings in origin/master branch, and set that up as local master branch
+        $ git branch -a
+        /* check all the branches local, it should show both master and develop
+        ```
+- Deal with conflicts when pulling
+```sh
+/* first make sure local and remote are up to date
+/* create a problemetic change on remote repo and commit
+$ git fetch /* copy everything from repo to local
+$ git status /* now can see that origin/develop branch is one commit ahead
+
+/* make local changes on the same file on local repo and commit
+$ git commit -am "Update readme local"
+$ git status /* now it shows local develop branch and remote origin/develop branch diverged
+$ git pull /* fetch + merge, it will bring in merge error and enters the develop|MERGE status
+$ git mergetool /* use the configed git merge tool to resolve the conflicts
+$ git commit -m "resolving the merge conflict with merging tool" /* commit the conflict resolving and the repo should exit the develop|MERGE status
+$ git status /* so local repo is ahead of remote 2 commits and README.md.orig file is not staged which should be removed
+$ rm *.orig /* remove the original README.md.orig file
+$ git push /* push develop to remote develop
+/* go to github and reload, should see the changes
+```
+
+### Github Tags and Releases
+- create local tags (simple and lightweight tags)
+```sh
+$ git status /* check the current working directory is clean
+$ git log --oneline /* check the commits history
+/* create several tags to mark major milestones in this repo based on the commit list
+$ git tag /* check the current available tags
+
+/* create simple and lightweight tags, no extra info
+/* create a tag unstable to reference the HEAD position (last commit of the current branch)
+$ git tag unstable develop /* create tag unstable to reference to the last commit of develop branch
+$ git tag stable master /* create tag stable to reference to the last commit of master branch
+$ git hist
+```
+
+- create release tags or annotated tags
+```sh
+$ git tag -a v0.1-alpha -m "Realse 0.1 (Alpha)" 85fe102 /* -a mean annotated tag and 85fe102 is the commit
+$ git tag /* should show 3 tags now
+/* for annotated tags can use git show 
+$ git show v0.1-alpha /* show tag info and related commit info
+/* in this way can create more annotated tag
+```
+
+- push local tags to remote github
+```sh
+$ git pull /* make sure everything up to date
+/* by default, git push will not push the tags
+/* need to use git push command specifying the tags to push
+$ git push origin stable /* origin is remote name, stable is the tag name
+$ git push --tags /* push all the tag
+```
+
+- tags in Github
+
+For lightweighted tags, it will only show commit message
+For annotated tags, it will show the corresponding tag message
+
+- Deleting tags on Github
+```sh
+/* delete a tag on Github
+/* but the tag still in local
+$ git fetch -p /* fetch all the current reference 
+/* delete the tag on local
+$ git tag -d v0.1-alpha
+```
+
+- delete tags local first
+```sh
+$ git tag -d v0.2-alpha
+$ git push origin :v0.2-alpha /* it will show the remote tag is deleted
+```
+
+- Updating tags Floating tags
+```sh
+$ git status
+/* make some changes
+$ git commit -am "update change"
+$ git push 
+$ git log --oneline --decorate
+/* update an existing tag to the latest commit
+S git tag -f unstable 426900a 
+/* -f means update tag
+/* unstable is tag name
+/* 426900a is the commit to reference to. if blank, point to the last commit
+$ git log --oneline --decorate
+$ git pull
+$ git push /* push the changes to remote, but the tags is not pushed
+$ git push --force origin unstable 
+/* stable already exits in remote, git push will result in conflict
+/* --force will force the new tag to github
+```
+
+### Starting a release on Github
+- GitHub realease is together with tags
+- Under the Tags tab, there is option of Add release nots
+- Click Add release notes, will lead back to the release to write release notes
+- Push release
+
+- Delete a Release
+
+- create a completely new release
+    - Releaes > new release
+    - It will create a related tag the same time
+```sh
+$ git checkout master /* new created release on github is on master
+$ git tag
+$ git pull
+$ git show V1.0 /* if V1.0 no info, it means it is light tag
+```
+
+
+### Compare on GitHub with Pull Requests
+- compare commits
+- compare tags
+
+## Social Coding
+Fork a public repository, contribute, and send it back by creating pull request. By Fork a public repo on Githuh, it will create a copy of the repo to your account. Then you can work on the code on the repo of your own account.
+1. create a branch first
+2. clone the repo to your local and make changes
+3. create a pull request
+
+```sh
+$ git clone localRepoURL
+$ cd localRepo /* change the path to local repo folder 
+$ git checkout -b feature-readme /* create a new branch to save our work
+$ notepad README.md /* create a readme file
+$ git commit -am "update readme file"
+$ git push -u origin feature-readme /* push the changes to repo
+```
+
+1. Go to github repo and check the new created branch
+2. Click Compare and pull request or within in the branch, click the pull request button
+3. by default, the pull request will set up relationship back to the upstream repository (not my github repo, but where the repo forked from)
+4. Once confirmed the relationship, click create a Create Pull Request
+5. It will load to the target/parent repo once the request is created
+
+- Update pull request
+1. go the parent repo and check Pull request 
+2. Go the your pull request
+3. Available options:
+    - Edit title of the pull request
+    - Assign labels, milestones, assignees for review
+    - Add more commits to the feature-readme branch 
+4. Available tabs:
+    - Conversation
+        - conversation
+        - Whether it can be merged with based branches
+    - Commits
+    - Files changed
+```sh
+/* update readme file again
+$ git commit -am "update the readme again"
+$ git status /* one commit ahead
+$ git push /* push the commit back to my github repo
+```
+Now check the parent repo (where forked from), the pull request is updated with the last commit as well.
+
+- Review and accept pull request
+
+As the user of the public repo (where forked from), go to pull request. Go to the pull request you are interested in reviewing. Available options: Conversation, commits, FilesChanged; Merge pull request
+
+    - Add comment  with markdown
+    - Merge pull request
+        - add merge message
+    - revert the pull request
+
+Go back to my personal github repo (where forked to) and check the Pull Request, it will show a merge icon under title
+
+    - Under the pull request, Delete branch is available
+
+- Github graphs
+- Synchronize changes back to your work
+```sh
+/* go the parental repo (where forked from) and copy repoURL
+/* git bash prompt and cd to the local repo folder and checkout your branch
+$ git status /* clean
+$ git remote -V /* Verbose, show all remote repository references
+/* Other remote references can be added
+$ git remote add upstream repoURL /* upstream is the name of the new reference
+$ git remote -V /* the list should include the newly create upstream reference
+$ git pull upstream master /* pull from upstream to local master branch
+$ git push origin master /* push changes to my remote repo (where forked to)
+```
+
+Clean up the working directory
+
+```sh
+$ git branch -a
+$ git branch -d feature-readme
+/* if didnt integrate the changes from the upstream repo, feature-readme branch wont be updated on my github repo. Git will show error if delete it
+$ git branch -a /* it should only one master branch now. But there are reference to the remote branches. However, check the remote github branch, there is only one master branch only. So fetech the remote repo to local to remove these references.
+$ git fetch -p /* -p mean prune option
+/* git will go to the github remote repo and notice branches deleted. So it will delete the reference to that branch
+```
