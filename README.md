@@ -947,3 +947,9 @@ $ git fetch -p /* -p mean prune option
 $ eval "$(conda shell.bash hook)"
 $ conda activate <env-name>
 ```
+
+```sh
+$ c:/Users/user/Miniconda3/Scripts/activate
+$ conda activate ds
+$ conda install --name ds autopep8 -y
+```
