@@ -938,3 +938,12 @@ $ git branch -a /* it should only one master branch now. But there are reference
 $ git fetch -p /* -p mean prune option
 /* git will go to the github remote repo and notice branches deleted. So it will delete the reference to that branch
 ```
+
+## FAQ
+
+1. How to activate conda environment in Bash?
+
+```sh
+$ eval "$(conda shell.bash hook)"
+$ conda activate <env-name>
+```
