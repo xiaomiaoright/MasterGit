@@ -953,3 +953,11 @@ $ c:/Users/user/Miniconda3/Scripts/activate
 $ conda activate ds
 $ conda install --name ds autopep8 -y
 ```
+
+Create conda environment with .yml file
+```sh
+$ eval "$(conda shell.bash hook)"
+$ conda env create -f nlp_course_env.yml
+$ conda activate nlp_course
+```
+
