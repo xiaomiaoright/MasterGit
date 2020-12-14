@@ -313,9 +313,17 @@ HEAD is the last commit pointer
 $ git branch
 ```
 - create and switch to a new branch
+
 ```sh
+$ git checkout -b iss53
+```
 
+Switched to a new branch "iss53"
+This is shorthand for:
 
+```sh
+$ git branch iss53
+$ git checkout iss53
 ```
 
 - add and commit on the new branch
